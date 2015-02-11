@@ -2,7 +2,9 @@ import play.PlayScala
 
 scalaVersion := "2.11.4"
 
-name := """youtube-html-app"""
+name := """yetu-scala-play-authenticator"""
+
+organization := "com.yetu"
 
 version := "2.0-SNAPSHOT"
 
