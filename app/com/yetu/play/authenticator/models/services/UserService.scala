@@ -1,8 +1,8 @@
-package models.services
+package com.yetu.play.authenticator.models.services
 
 import com.mohiva.play.silhouette.api.services.IdentityService
 import com.mohiva.play.silhouette.impl.providers.CommonSocialProfile
-import models.User
+import com.yetu.play.authenticator.models.User
 
 import scala.concurrent.Future
 

@@ -1,4 +1,4 @@
-package models
+package com.yetu.play.authenticator.models
 
 import java.util.UUID
 

@@ -1,3 +1,4 @@
+package com.yetu.play.authenticator
 package models.daos
 
 import com.mohiva.play.silhouette.api.LoginInfo
