@@ -5,7 +5,7 @@ import javax.inject.Inject
 
 import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.impl.providers.CommonSocialProfile
-import com.yetu.play.authenticator.models.User
+import com.yetu.play.authenticator.models.{YetuSocialProfile, User}
 import com.yetu.play.authenticator.models.daos.UserDAO
 import play.api.libs.concurrent.Execution.Implicits._
 
@@ -42,7 +42,7 @@ class UserServiceImpl @Inject() (userDAO: UserDAO) extends UserService {
    * @param profile The social profile to save.
    * @return The user for whom the profile was saved.
    */
-  def save(profile: CommonSocialProfile) = {
+  def save(profile: YetuSocialProfile) = {
     userDAO.find(profile.loginInfo).flatMap {
       case Some(user) => // Update user with profile
         userDAO.save(user.copy(
@@ -54,7 +54,7 @@ class UserServiceImpl @Inject() (userDAO: UserDAO) extends UserService {
         ))
       case None => // Insert a new user
         userDAO.save(User(
-          userID = UUID.randomUUID(),
+          userUUID = profile.userUUID,
           loginInfo = profile.loginInfo,
           firstName = profile.firstName,
           lastName = profile.lastName,

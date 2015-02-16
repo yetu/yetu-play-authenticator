@@ -5,6 +5,7 @@ import com.mohiva.play.silhouette.api.util.HTTPLayer
 
 import com.mohiva.play.silhouette.impl.exceptions.ProfileRetrievalException
 import com.mohiva.play.silhouette.impl.providers._
+import com.yetu.play.authenticator.models.YetuSocialProfile
 import com.yetu.play.authenticator.utils.di.YetuProvider.API
 import com.yetu.play.authenticator.utils.di.YetuProvider.SpecifiedProfileError
 
@@ -76,10 +77,11 @@ abstract class YetuProvider(httpLayer: HTTPLayer, stateProvider: OAuth2StateProv
 }
 
 
+
 /**
  * The profile parser for the common social profile.
  */
-class YetuProfileParser extends SocialProfileParser[JsValue, CommonSocialProfile] {
+class YetuProfileParser extends SocialProfileParser[JsValue, YetuSocialProfile] {
 
   /**
    * Parses the social profile.
@@ -87,8 +89,8 @@ class YetuProfileParser extends SocialProfileParser[JsValue, CommonSocialProfile
    * @param json The content returned from the provider.
    * @return The social profile from given result.
    */
-  def parse(json: JsValue) = Future.successful {
-    val userID = (json \ "userId").as[String]
+  def parse(json: JsValue): Future[YetuSocialProfile] = Future.successful {
+    val userUUID = (json \ "userId").as[String]
     val firstName = (json \ "firstName").asOpt[String]
     val lastName = (json \ "lastName").asOpt[String]
     val email = (json \ "email").asOpt[String]
@@ -96,8 +98,9 @@ class YetuProfileParser extends SocialProfileParser[JsValue, CommonSocialProfile
     val avatarURL = (json \ "image" \ "url").asOpt[String]
 
 
-    CommonSocialProfile(
-      loginInfo = LoginInfo(Yetu, userID),
+    YetuSocialProfile(
+      loginInfo = LoginInfo(Yetu, userUUID),
+      userUUID = userUUID,
       firstName = firstName,
       lastName = lastName,
       fullName = fullName,
@@ -109,13 +112,25 @@ class YetuProfileParser extends SocialProfileParser[JsValue, CommonSocialProfile
 /**
  * The profile builder for the common social profile.
  */
-trait YetuProfileBuilder extends CommonSocialProfileBuilder {
+trait YetuProfileBuilder extends YetuSocialProfileBuilder {
   self: YetuProvider =>
 
   /**
    * The profile parser implementation.
    */
   val profileParser = new YetuProfileParser
+}
+
+/**
+ * The profile builder for the common social profile.
+ */
+trait YetuSocialProfileBuilder {
+  self: SocialProfileBuilder =>
+
+  /**
+   * The type of the profile a profile builder is responsible for.
+   */
+  type Profile = YetuSocialProfile
 }
 
 /**

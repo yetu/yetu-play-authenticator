@@ -40,7 +40,7 @@ object FakeGlobal {
    * An identity.
    */
   val identity = User(
-    userID = UUID.randomUUID(),
+    userUUID = UUID.randomUUID().toString,
     loginInfo = LoginInfo("provider", "user@user.com"),
     firstName = None,
     lastName = None,

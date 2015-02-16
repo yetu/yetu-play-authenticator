@@ -11,7 +11,7 @@ import com.yetu.play.authenticator.models.User
 import com.yetu.play.authenticator.models.services.UserService
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.mvc.Action
-import com.yetu.play.authenticator.utils.di.ConfigLoader
+import com.yetu.play.authenticator.utils.di.{YetuProfileBuilder, ConfigLoader}
 
 import scala.concurrent.Future
 
@@ -33,7 +33,7 @@ class SocialAuthController @Inject() (
    */
   def authenticate(provider: String) = Action.async { implicit request =>
     (env.providers.get(provider) match {
-      case Some(p: SocialProvider with CommonSocialProfileBuilder) =>
+      case Some(p: SocialProvider with YetuProfileBuilder) =>
         p.authenticate().flatMap {
           case Left(result) => Future.successful(result)
           case Right(authInfo) => for {
