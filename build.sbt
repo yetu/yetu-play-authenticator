@@ -1,12 +1,11 @@
+import bintray.Keys._
 import play.PlayScala
 
 scalaVersion := "2.11.4"
 
-name := """yetu-scala-play-authenticator"""
+name := """yetu-play-authenticator"""
 
 organization := "com.yetu"
-
-version := "2.0-SNAPSHOT"
 
 resolvers := ("Atlassian Releases" at "https://maven.atlassian.com/public/") +: resolvers.value
 
@@ -36,3 +35,27 @@ scalacOptions ++= Seq(
   "-Ywarn-numeric-widen", // Warn when numerics are widened.
   "-language:implicitConversions" //allow implicit convertions defined by implicit def convertAtoB(a:A):B type functions
 )
+
+
+// ----------- publishing settings -----------------------------------
+// http://www.scala-sbt.org/0.13.5/docs/Detailed-Topics/Publishing.html
+// -------------------------------------------------------------------
+
+// sbt-release plugin settings:
+releaseSettings
+
+publishMavenStyle := true
+
+publishArtifact in (Test, packageBin) := true
+
+// settings for bintray publishing
+
+bintrayPublishSettings
+
+repository in bintray := "maven"
+
+licenses += ("MIT", url("http://opensource.org/licenses/MIT"))
+
+packageLabels in bintray := Seq("oauth2", "yetu")
+
+bintrayOrganization in bintray := Some("yetu")
