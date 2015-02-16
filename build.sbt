@@ -12,9 +12,9 @@ resolvers := ("Atlassian Releases" at "https://maven.atlassian.com/public/") +: 
 resolvers += Resolver.sonatypeRepo("snapshots")
 
 libraryDependencies ++= Seq(
-  "com.mohiva" %% "play-silhouette" % "2.0-SNAPSHOT",
+  "com.mohiva" %% "play-silhouette" % "2.0-RC1",
+  "com.mohiva" %% "play-silhouette-testkit" % "2.0-RC1" % "test",
   "net.codingwell" %% "scala-guice" % "4.0.0-beta4",
-  "com.mohiva" %% "play-silhouette-testkit" % "2.0-SNAPSHOT" % "test",
   "org.scalatest" %% "scalatest" % "2.2.1" % "test",
   "org.scalatestplus"  %% "play"  % "1.2.0" % "test",
   cache

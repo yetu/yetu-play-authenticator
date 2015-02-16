@@ -7,9 +7,6 @@ import com.mohiva.play.silhouette.api.{Environment, EventBus}
 import com.mohiva.play.silhouette.impl.authenticators._
 import com.mohiva.play.silhouette.impl.daos.DelegableAuthInfoDAO
 import com.mohiva.play.silhouette.impl.providers._
-import com.mohiva.play.silhouette.impl.providers.oauth1._
-import com.mohiva.play.silhouette.impl.providers.oauth1.services.PlayOAuth1Service
-import com.mohiva.play.silhouette.impl.providers.oauth2._
 import com.mohiva.play.silhouette.impl.providers.oauth2.state.{CookieStateProvider, CookieStateSettings}
 import com.mohiva.play.silhouette.impl.services._
 import com.mohiva.play.silhouette.impl.util._
@@ -129,12 +126,12 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
    *
    * @param cacheLayer The cache layer implementation.
    * @param httpLayer The HTTP layer implementation.
-   * @return The Google provider.
+   * @return The Yetu provider.
    */
   @Provides
   def provideYetuProvider(cacheLayer: CacheLayer, stateProvider: OAuth2StateProvider,  httpLayer: HTTPLayer): YetuProvider = {
     YetuProvider( httpLayer,stateProvider, OAuth2Settings(
-      authorizationURL = Play.configuration.getString("silhouette.yetu.authorizationURL").get,
+      authorizationURL = Play.configuration.getString("silhouette.yetu.authorizationURL"),
       accessTokenURL = Play.configuration.getString("silhouette.yetu.accessTokenURL").get,
       redirectURL = Play.configuration.getString("silhouette.yetu.redirectURL").get,
       clientID = Play.configuration.getString("silhouette.yetu.clientID").get,
