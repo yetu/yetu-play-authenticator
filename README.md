@@ -1,13 +1,13 @@
 # yetu play authenticator
 
-A Scala/Playframework library using [Mohiva Silhouette](https://github.com/mohiva/play-silhouette) to "log in with yetu".
+A Scala / Play Framework library using [Mohiva Silhouette](https://github.com/mohiva/play-silhouette) to "log in with yetu".
 
-This small library is intended to help you get started building an app that authorizes with and fits into the yetu ecosystem.
+This library is intended to help you get started building an app that authorizes with and fits into the yetu ecosystem.
 
 This library is based on, and takes code from [play-silhouette-seed](https://github.com/mohiva/play-silhouette-seed) (Thanks!)
 It uses OAuth2
 
-## How to use this library from your Scala/Play application:
+## How to use this library from your Scala / Play Framework application:
 
 ### get a pair of clientId / clientSecret from yetu to authorize your app:
 
