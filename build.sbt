@@ -1,7 +1,7 @@
 import bintray.Keys._
 import play.PlayScala
 
-scalaVersion := "2.11.4"
+scalaVersion := "2.11.5"
 
 name := """yetu-play-authenticator"""
 
@@ -40,6 +40,9 @@ scalacOptions ++= Seq(
 // ----------- publishing settings -----------------------------------
 // http://www.scala-sbt.org/0.13.5/docs/Detailed-Topics/Publishing.html
 // -------------------------------------------------------------------
+
+
+crossScalaVersions := Seq("2.10.4", "2.11.5")
 
 // sbt-release plugin settings:
 releaseSettings
