@@ -11,7 +11,10 @@ It uses OAuth2
 
 ### get a pair of clientId / clientSecret from yetu to authorize your app:
 
-TODO fill this section?
+Currently please contact dev-support@yetu.com to obtain OAuth2 credentials.
+
+For more information on how to develop yetu apps, please see [this page](https://github.com/yetu/app-development-workflow/wiki/How-to-develop-Apps-for-the-yetu-platform%3F)
+
 
 ### in your `project/plugins.sbt` file add:
 
@@ -39,3 +42,12 @@ libraryDependencies += "com.yetu" %% "yetu-play-authenticator" % "<VERSION>"
 
 ### in your `conf/routes` add:
 
+```
+# Silhouette / Authentication routes
+GET         /signOut                       @com.yetu.play.authenticator.controllers.ApplicationController.signOut
+GET         /authenticate/:provider        @com.yetu.play.authenticator.controllers.SocialAuthController.authenticate(provider)
+```
+
+### example app:
+
+For more information, also have a look at the [youtube-html-app](https://github.com/yetu/youtube-html-app) to see how this library can be used.
