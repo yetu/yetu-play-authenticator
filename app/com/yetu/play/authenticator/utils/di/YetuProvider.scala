@@ -1,5 +1,7 @@
 package com.yetu.play.authenticator.utils.di
 
+import java.util.UUID
+
 import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.api.util.HTTPLayer
 
@@ -100,7 +102,7 @@ class YetuProfileParser extends SocialProfileParser[JsValue, YetuSocialProfile] 
 
     YetuSocialProfile(
       loginInfo = LoginInfo(Yetu, userUUID),
-      userUUID = userUUID,
+      userUUID = UUID.fromString(userUUID),
       firstName = firstName,
       lastName = lastName,
       fullName = fullName,

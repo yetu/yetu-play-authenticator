@@ -26,7 +26,7 @@ trait UserDAO {
    * @param userUUID The ID of the user to find.
    * @return The found user or None if no user for the given ID could be found.
    */
-  def find(userUUID: String): Future[Option[User]]
+  def find(userUUID: UUID): Future[Option[User]]
 
   /**
    * Saves a user.

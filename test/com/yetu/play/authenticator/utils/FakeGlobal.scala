@@ -7,11 +7,14 @@ import com.mohiva.play.silhouette.api.{LoginInfo, Environment}
 import com.mohiva.play.silhouette.impl.authenticators.SessionAuthenticator
 import com.mohiva.play.silhouette.test.FakeEnvironment
 import com.yetu.play.authenticator.Global
+import com.yetu.play.authenticator.controllers.{ApplicationController, SocialAuthController}
 import com.yetu.play.authenticator.models.User
 import net.codingwell.scalaguice.ScalaModule
 import com.yetu.play.authenticator.utils.di.SilhouetteModule
 
 import FakeGlobal._
+import play.api.mvc.RequestHeader
+import play.api.mvc.Handler
 
 /**
  * Provides a fake global to override the Guice injector.
@@ -31,6 +34,20 @@ class FakeGlobal extends Global {
       bind[Environment[User, SessionAuthenticator]].toInstance(env)
     }
   }
+
+  val socialAuthController = injector.getInstance[SocialAuthController](classOf[SocialAuthController])
+  val applicationController = injector.getInstance[ApplicationController](classOf[ApplicationController])
+
+  override def onRouteRequest(req: RequestHeader): Option[Handler] = {
+    (req.method, req.path) match {
+
+      case ("GET", "/helloTestRoute") => Some(applicationController.hello)
+      case ("GET", "/signOut") => Some(applicationController.signOut)
+      case ("GET", "/authenticate/yetu") => Some(socialAuthController.authenticate("yetu"))
+      case _ => None
+    }
+  }
+
 }
 
 object FakeGlobal {
@@ -40,7 +57,7 @@ object FakeGlobal {
    * An identity.
    */
   val identity = User(
-    userUUID = UUID.randomUUID().toString,
+    userUUID = UUID.randomUUID(),
     loginInfo = LoginInfo("provider", "user@user.com"),
     firstName = None,
     lastName = None,

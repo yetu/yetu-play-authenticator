@@ -30,6 +30,10 @@ class ApplicationController @Inject()(implicit val env: Environment[User, Sessio
 
     request.authenticator.discard(result)
   }
+
+  def hello = SecuredAction {
+    Ok("hello")
+  }
 }
 
 

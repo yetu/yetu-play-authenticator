@@ -32,7 +32,7 @@ class UserDAOImpl extends UserDAO {
    * @param userUUID The ID of the user to find.
    * @return The found user or None if no user for the given ID could be found.
    */
-  def find(userUUID: String) = Future.successful(users.get(userUUID))
+  def find(userUUID: UUID) = Future.successful(users.get(userUUID))
 
   /**
    * Saves a user.
@@ -54,5 +54,5 @@ object UserDAOImpl {
   /**
    * The list of users.
    */
-  val users: mutable.HashMap[String, User] = mutable.HashMap()
+  val users: mutable.HashMap[UUID, User] = mutable.HashMap()
 }
