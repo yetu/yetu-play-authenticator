@@ -13,22 +13,22 @@ import com.yetu.play.authenticator.controllers._
 
 import scala.concurrent.Future
 
-/**
+/*
  * The global object.
  */
 object Global extends Global
 
-/**
+/*
  * The global configuration.
  */
 trait Global extends GlobalSettings with SecuredSettings with Logger {
 
-  /**
+  /*
    * The Guice dependencies injector.
    */
   val injector = Guice.createInjector(new SilhouetteModule)
 
-  /**
+  /*
    * Loads the controller classes with the Guice injector,
    * in order to be able to inject dependencies directly into the controller.
    *
@@ -38,7 +38,7 @@ trait Global extends GlobalSettings with SecuredSettings with Logger {
    */
   override def getControllerInstance[A](controllerClass: Class[A]) = injector.getInstance(controllerClass)
 
-  /**
+  /*
    * Called when a user is not authenticated.
    *
    * As defined by RFC 2616, the status code of the response should be 401 Unauthorized.
