@@ -14,4 +14,10 @@ trait AllowAllCorsFilter extends CorsFilterHelper {
 }
 
 
+/** usage in Global.scala:
+  *
+  * import play.api.mvc.EssentialAction
+  * import com.yetu.play.authenticator.filters.AllowAllCorsFilter
+  * override def doFilter(action: EssentialAction) = AllowAllCorsFilter(action)
+  */
 object AllowAllCorsFilter extends AllowAllCorsFilter
