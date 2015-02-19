@@ -8,6 +8,7 @@ object ConfigLoader {
 
   object AuthServer {
     val profileUrl = config.getString("silhouette.yetu.profileURL")
+    val logoutURL = config.getString("silhouette.yetu.logoutURL")
   }
 
   val indexUrl = "/"
