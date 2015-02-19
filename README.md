@@ -1,5 +1,7 @@
 # yetu play authenticator
 
+[![Build Status](https://travis-ci.org/yetu/yetu-play-authenticator.svg?branch=master)](https://travis-ci.org/yetu/yetu-play-authenticator)
+
 A Scala / Play Framework library using [Mohiva Silhouette](https://github.com/mohiva/play-silhouette) to "log in with yetu".
 
 This library is intended to help you get started building an app that authorizes with and fits into the yetu ecosystem.
