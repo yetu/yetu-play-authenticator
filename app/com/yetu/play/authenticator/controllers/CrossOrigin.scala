@@ -12,7 +12,7 @@ object CrossOrigin extends Controller {
     NoContent.withHeaders("Access-Control-Allow-Origin" -> "*",
       "Allow" -> "*",
       "Access-Control-Allow-Methods" -> "POST, GET, PUT, DELETE, OPTIONS",
-      "Access-Control-Allow-Headers" -> "Origin, X-Requested-With, Content-Type, Accept, Referer, User-Agent")
+      "Access-Control-Allow-Headers" -> "Origin, X-Requested-With, Content-Type, Accept, Referer, User-Agent, Accept-Encoding")
   }
 
 }
