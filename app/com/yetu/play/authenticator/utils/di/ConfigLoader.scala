@@ -1,17 +1,24 @@
 package com.yetu.play.authenticator.utils.di
-
-import com.typesafe.config.ConfigFactory
+import play.api.Play
+import play.api.Play.current
 
 object ConfigLoader {
 
-  private val config = ConfigFactory.load()
-
   object AuthServer {
-    val profileUrl = config.getString("silhouette.yetu.profileURL")
-    val logoutURL = config.getString("silhouette.yetu.logoutURL")
+    val profileUrl = Play.configuration.getString("silhouette.yetu.profileURL").get
+    val logoutURL = Play.configuration.getString("silhouette.yetu.logoutURL").get
   }
 
-  val indexUrl = "/"
+  val singleSignOut = Play.configuration.getBoolean("silhouette.yetu.singleSignOut")
+  val onLogoutGoToIfNoSingleSignOut = Play.configuration.getString("silhouette.yetu.onLogoutGoToIfNoSingleSignOut").get
+
+  val onLogoutGoTo : String = singleSignOut.getOrElse(false) match {
+    case true => AuthServer.logoutURL
+    case false => onLogoutGoToIfNoSingleSignOut
+  }
+
+
+
 
 
 }
