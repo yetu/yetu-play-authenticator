@@ -35,6 +35,12 @@ class OAuth2InfoDAO extends DelegableAuthInfoDAO[OAuth2Info] {
   def find(loginInfo: LoginInfo): Future[Option[OAuth2Info]] = {
     Future.successful(data.get(loginInfo))
   }
+
+
+  def findByAccessToken(accessToken: String): Future[Option[LoginInfo]] = {
+    Future.successful(data.find(x => x._2.accessToken==accessToken).map(_._1))
+  }
+
 }
 
 /**

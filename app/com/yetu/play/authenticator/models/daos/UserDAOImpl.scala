@@ -54,5 +54,5 @@ object UserDAOImpl {
   /**
    * The list of users.
    */
-  val users: mutable.HashMap[UUID, User] = mutable.HashMap()
+  var users: mutable.HashMap[UUID, User] = mutable.HashMap()
 }
