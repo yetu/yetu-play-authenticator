@@ -47,10 +47,11 @@ class ApplicationController @Inject()(userDao: UserDAO)(implicit val env: Enviro
     val result = for {
       info: Option[LoginInfo] <- oauth2Dao.findByAccessToken(accessToken)
       user: Option[User] <- userDao.find(loginInfo = info.get)
-
+      // userDao.delete (TODO: if we proceed with this approach, implement delete method)
     // delete access token from oauth2Dao or delete user from userDao for this user
     } yield ()
 
+    // for testing purposes: reset the hashmaps completely.
     OAuth2InfoDAO.data = mutable.HashMap()
     UserDAOImpl.users = mutable.HashMap()
 
