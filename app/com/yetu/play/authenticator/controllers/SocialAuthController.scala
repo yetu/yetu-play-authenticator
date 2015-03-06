@@ -43,8 +43,7 @@ class SocialAuthController @Inject() (
             authenticator <- env.authenticatorService.create(user.loginInfo)
             value <- env.authenticatorService.init(authenticator)
             result <- env.authenticatorService.embed(value, Future.successful(
-            //TODO: parametrise the redirect location?
-              Redirect(ConfigLoader.indexUrl)
+              Redirect(ConfigLoader.onLoginGoTo)
             ))
           } yield {
             env.eventBus.publish(LoginEvent(user, request, request2lang))

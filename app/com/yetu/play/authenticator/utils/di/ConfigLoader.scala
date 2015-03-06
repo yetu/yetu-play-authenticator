@@ -11,6 +11,7 @@ object ConfigLoader {
 
   val singleSignOut = Play.configuration.getBoolean("silhouette.yetu.singleSignOut")
   val onLogoutGoToIfNoSingleSignOut = Play.configuration.getString("silhouette.yetu.onLogoutGoToIfNoSingleSignOut").get
+  val onLoginGoTo = Play.configuration.getString("silhouette.yetu.onLoginGoTo").get
 
   val onLogoutGoTo : String = singleSignOut.getOrElse(false) match {
     case true => AuthServer.logoutURL
