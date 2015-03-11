@@ -1,14 +1,14 @@
 package com.yetu.play.authenticator.controllers
 
+import java.util.NoSuchElementException
 import javax.inject.Inject
 
-import com.mohiva.play.silhouette.api.{LoginInfo, Environment, LogoutEvent, Silhouette}
+import com.mohiva.play.silhouette.api.{Environment, LoginInfo, LogoutEvent, Silhouette}
 import com.mohiva.play.silhouette.impl.authenticators.SessionAuthenticator
-import com.mohiva.play.silhouette.impl.providers.OAuth2Info
 import com.yetu.play.authenticator.models.User
-import com.yetu.play.authenticator.models.daos.{UserDAOImpl, UserDAO, OAuth2InfoDAO}
+import com.yetu.play.authenticator.models.daos.{OAuth2InfoDAO, UserDAO}
 import com.yetu.play.authenticator.utils.di.ConfigLoader
-import play.api.mvc.Action
+import play.api.mvc.{Action, Result}
 
 import scala.concurrent.Future
 
@@ -32,6 +32,33 @@ class ApplicationController @Inject()(userDao: UserDAO)(implicit val env: Enviro
 
     request.authenticator.discard(result)
   }
+
+  def apiLogout = Action.async { request =>
+    import scala.concurrent.ExecutionContext.Implicits.global
+
+    request.getQueryString("access_token") match {
+      case Some(accessToken) => {
+        val result = for {
+          info: Option[LoginInfo] <- oauth2Dao.findByAccessToken(accessToken)
+          user: Option[User] <- userDao.find(loginInfo = info.get)
+          removeUser <- userDao.remove(user.get.userUUID)
+          removeAuthInfo <- oauth2Dao.remove(info.get)
+        } yield removeAuthInfo
+        result.map(_ => NoContent).recover(withErrorHandling)
+      }
+      case _ => Future.successful(NotFound("no access token"))
+    }
+  }
+
+  /**
+   * *
+   * @return
+   */
+  def withErrorHandling: PartialFunction[Throwable, Result] = {
+    case x: NoSuchElementException => NotFound("no access token")
+    // any unhandled case here will result in play's default 500 or 404 error
+  }
+
 
   def hello = SecuredAction {
     Ok("hello")

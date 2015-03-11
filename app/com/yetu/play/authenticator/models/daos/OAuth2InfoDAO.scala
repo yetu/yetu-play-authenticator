@@ -1,13 +1,17 @@
 package com.yetu.play.authenticator
 package models.daos
 
+import java.util.concurrent.ConcurrentHashMap
+
 import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.impl.daos.DelegableAuthInfoDAO
 import com.mohiva.play.silhouette.impl.providers.OAuth2Info
-import models.daos.OAuth2InfoDAO._
+import com.yetu.play.authenticator.models.daos.OAuth2InfoDAO._
 
-import scala.collection.mutable
+import scala.collection.JavaConverters._
+import scala.collection._
 import scala.concurrent.Future
+import scala.language.postfixOps
 
 /**
  * The DAO to store the OAuth2 information.
@@ -35,6 +39,23 @@ class OAuth2InfoDAO extends DelegableAuthInfoDAO[OAuth2Info] {
   def find(loginInfo: LoginInfo): Future[Option[OAuth2Info]] = {
     Future.successful(data.get(loginInfo))
   }
+
+
+  /**
+   * Removes the user from the given data store
+   * @param loginInfo
+   * @return
+   */
+  def remove(loginInfo: LoginInfo): Future[Unit] = {
+    data -= loginInfo
+    Future.successful(Unit)
+  }
+
+
+  def findByAccessToken(accessToken: String): Future[Option[LoginInfo]] = {
+    Future.successful(data.find(x => x._2.accessToken == accessToken).map(_._1))
+  }
+
 }
 
 /**
@@ -45,5 +66,6 @@ object OAuth2InfoDAO {
   /**
    * The data store for the OAuth2 info.
    */
-  var data: mutable.HashMap[LoginInfo, OAuth2Info] = mutable.HashMap()
+  var data: concurrent.Map[LoginInfo, OAuth2Info] = new ConcurrentHashMap[LoginInfo, OAuth2Info] asScala
+
 }

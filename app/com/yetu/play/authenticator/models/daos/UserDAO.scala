@@ -29,6 +29,13 @@ trait UserDAO {
   def find(userUUID: UUID): Future[Option[User]]
 
   /**
+   * Removes the user from the given data store
+   * @param userUUID
+   * @return
+   */
+  def remove(userUUID: UUID): Future[Unit]
+
+  /**
    * Saves a user.
    *
    * @param user The user to save.
