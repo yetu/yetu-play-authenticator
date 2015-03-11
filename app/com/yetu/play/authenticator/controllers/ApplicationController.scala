@@ -1,16 +1,15 @@
 package com.yetu.play.authenticator.controllers
 
+import java.util.NoSuchElementException
 import javax.inject.Inject
 
-import com.mohiva.play.silhouette.api.{LoginInfo, Environment, LogoutEvent, Silhouette}
+import com.mohiva.play.silhouette.api.{Environment, LoginInfo, LogoutEvent, Silhouette}
 import com.mohiva.play.silhouette.impl.authenticators.SessionAuthenticator
-import com.mohiva.play.silhouette.impl.providers.OAuth2Info
 import com.yetu.play.authenticator.models.User
-import com.yetu.play.authenticator.models.daos.{UserDAOImpl, UserDAO, OAuth2InfoDAO}
+import com.yetu.play.authenticator.models.daos.{OAuth2InfoDAO, UserDAO}
 import com.yetu.play.authenticator.utils.di.ConfigLoader
-import play.api.mvc.Action
+import play.api.mvc.{Action, Result}
 
-import scala.collection.mutable
 import scala.concurrent.Future
 
 
@@ -37,26 +36,29 @@ class ApplicationController @Inject()(userDao: UserDAO)(implicit val env: Enviro
   def apiLogout = Action.async { request =>
     import scala.concurrent.ExecutionContext.Implicits.global
 
-    val accessToken = request.getQueryString("access_token").get
-
-    // Does this make sense? This could delete token in the backend part of the app even though
-    // we cannot access the env.authenticator to discard the result (as that requires telling the client that the cookie is not valid)
-    // so the app will feel broken, as on the one hand there is no more access token,
-    // but on the other hand the user still has a valid cookie.
-    //
-    val result = for {
-      info: Option[LoginInfo] <- oauth2Dao.findByAccessToken(accessToken)
-      user: Option[User] <- userDao.find(loginInfo = info.get)
-      // userDao.delete (TODO: if we proceed with this approach, implement delete method)
-    // delete access token from oauth2Dao or delete user from userDao for this user
-    } yield ()
-
-    // for testing purposes: reset the hashmaps completely.
-    OAuth2InfoDAO.data = mutable.HashMap()
-    UserDAOImpl.users = mutable.HashMap()
-
-    result.map(_ => NoContent)
+    request.getQueryString("access_token") match {
+      case Some(accessToken) => {
+        val result = for {
+          info: Option[LoginInfo] <- oauth2Dao.findByAccessToken(accessToken)
+          user: Option[User] <- userDao.find(loginInfo = info.get)
+          removeUser <- userDao.remove(user.get.userUUID)
+          removeAuthInfo <- oauth2Dao.remove(info.get)
+        } yield removeAuthInfo
+        result.map(_ => NoContent).recover(withErrorHandling)
+      }
+      case _ => Future.successful(NotFound("no access token"))
+    }
   }
+
+  /**
+   * *
+   * @return
+   */
+  def withErrorHandling: PartialFunction[Throwable, Result] = {
+    case x: NoSuchElementException => NotFound("no access token")
+    // any unhandled case here will result in play's default 500 or 404 error
+  }
+
 
   def hello = SecuredAction {
     Ok("hello")
