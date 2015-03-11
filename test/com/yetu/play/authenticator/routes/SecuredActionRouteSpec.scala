@@ -22,15 +22,22 @@ class SecuredActionRouteSpec extends BaseSpec {
   }
 
   s"non-authenticated POST request on ${FakeGlobal.routeApiLogout}" must {
-    "return a valid 204 response when access token is removed" in {
+    "return a valid 204 response when access token is removed and 404 when access token does not exist" in {
+      import scala.concurrent.ExecutionContext.Implicits.global
+
       val response = postRequestAuthenticated(s"${FakeGlobal.routeApiLogout}?access_token=${FakeGlobal.oauth2Info.accessToken}")
-      status(response) mustEqual (NO_CONTENT)
+      //make sure execution order is correct
+      response onSuccess {
+        case e => {
+          status(response) mustEqual (NO_CONTENT)
+          //return a valid 404 response when access token does not exist
+          val secondResponse = postRequestAuthenticated(s"${FakeGlobal.routeApiLogout}?access_token=${FakeGlobal.oauth2Info.accessToken}")
+          status(secondResponse) mustEqual (NOT_FOUND)
+        }
+      }
     }
 
-    "return a valid 404 response when access token does not exist" in {
-      val response = postRequestAuthenticated(s"${FakeGlobal.routeApiLogout}?access_token=${FakeGlobal.oauth2Info.accessToken}")
-      status(response) mustEqual (NOT_FOUND)
-    }
+
 
     "return a valid 404 response when access token is not giving as url parameter" in {
       val response = postRequestAuthenticated(FakeGlobal.routeApiLogout)
