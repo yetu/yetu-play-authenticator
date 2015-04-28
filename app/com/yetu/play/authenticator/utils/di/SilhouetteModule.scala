@@ -17,10 +17,15 @@ import net.codingwell.scalaguice.ScalaModule
 import play.api.Play
 import play.api.Play.current
 
+import ConfigLoader.authorizationBaseUrl
+
+
 /**
  * The Guice module which wires all Silhouette dependencies.
  */
 class SilhouetteModule extends AbstractModule with ScalaModule {
+
+
 
   /**
    * Configures the module.
@@ -110,7 +115,7 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
   @Provides
   def provideOAuth2StateProvider(idGenerator: IDGenerator): OAuth2StateProvider = {
     new CookieStateProvider(CookieStateSettings(
-      cookieName = Play.configuration.getString("silhouette.oauth2StateProvider.cookieName").get,
+      cookieName = Play.configuration.getString("application.cookieName").get,
       cookiePath = Play.configuration.getString("silhouette.oauth2StateProvider.cookiePath").get,
       cookieDomain = Play.configuration.getString("silhouette.oauth2StateProvider.cookieDomain"),
       secureCookie = Play.configuration.getBoolean("silhouette.oauth2StateProvider.secureCookie").get,
@@ -130,12 +135,13 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
    */
   @Provides
   def provideYetuProvider(cacheLayer: CacheLayer, stateProvider: OAuth2StateProvider,  httpLayer: HTTPLayer): YetuProvider = {
+
     YetuProvider( httpLayer,stateProvider, OAuth2Settings(
-      authorizationURL = Play.configuration.getString("silhouette.yetu.authorizationURL"),
-      accessTokenURL = Play.configuration.getString("silhouette.yetu.accessTokenURL").get,
-      redirectURL = Play.configuration.getString("silhouette.yetu.redirectURL").get,
-      clientID = Play.configuration.getString("silhouette.yetu.clientID").get,
-      clientSecret = Play.configuration.getString("silhouette.yetu.clientSecret").get,
-      scope = Play.configuration.getString("silhouette.yetu.scope")))
+      authorizationURL = Play.configuration.getString("silhouette.yetu.authorizationURL").map(authorizationBaseUrl + _),
+      accessTokenURL = authorizationBaseUrl + Play.configuration.getString("silhouette.yetu.accessTokenURL").get,
+      redirectURL = Play.configuration.getString("application.redirectURL").get,
+      clientID = Play.configuration.getString("application.clientId").get,
+      clientSecret = Play.configuration.getString("application.clientSecret").get,
+      scope = Play.configuration.getString("application.scope")))
   }
 }

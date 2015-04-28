@@ -7,7 +7,7 @@ import com.mohiva.play.silhouette.api.{LoginInfo, Environment}
 import com.mohiva.play.silhouette.impl.authenticators.SessionAuthenticator
 import com.mohiva.play.silhouette.impl.providers.OAuth2Info
 import com.mohiva.play.silhouette.test.FakeEnvironment
-import com.yetu.play.authenticator.Global
+import com.yetu.play.authenticator.AuthenticatorGlobal
 import com.yetu.play.authenticator.controllers.{ApplicationController, SocialAuthController}
 import com.yetu.play.authenticator.models.User
 import com.yetu.play.authenticator.models.daos.{UserDAOImpl, OAuth2InfoDAO}
@@ -21,7 +21,7 @@ import play.api.mvc.Handler
 /**
  * Provides a fake global to override the Guice injector.
  */
-class FakeGlobal extends Global {
+class FakeGlobal extends AuthenticatorGlobal {
 
   /**
    * Overrides the Guice injector.

@@ -16,12 +16,12 @@ import scala.concurrent.Future
 /*
  * The global object.
  */
-object Global extends Global
+object AuthenticatorGlobal extends AuthenticatorGlobal
 
 /*
  * The global configuration.
  */
-trait Global extends GlobalSettings with SecuredSettings with Logger {
+trait AuthenticatorGlobal extends GlobalSettings with SecuredSettings with Logger {
 
   /*
    * The Guice dependencies injector.
@@ -48,6 +48,8 @@ trait Global extends GlobalSettings with SecuredSettings with Logger {
    * @return The result to send to the client.
    */
    override def onNotAuthenticated(request: RequestHeader, lang: Lang): Option[Future[Result]] = {
+    println("LIBRARY ON NOT AUTHENTICATED CALLED")
+
     Some(Future.successful(Redirect(routes.SocialAuthController.authenticate(YetuProvider.Yetu))))
   }
 
