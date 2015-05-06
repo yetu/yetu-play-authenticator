@@ -5,12 +5,14 @@ import com.mohiva.play.silhouette.api.{Logger, SecuredSettings}
 import com.yetu.notification.client.NotificationManager
 import com.yetu.play.authenticator.actors.EventsActor
 import com.yetu.play.authenticator.controllers.routes
+import com.yetu.play.authenticator.models.daos.{UserDAO, UserDAOImpl}
 import com.yetu.play.authenticator.utils.di.{SilhouetteModule, YetuProvider}
 import play.api.libs.concurrent.Akka
-import play.api.{Play, GlobalSettings}
+import play.api.{Application, Play, GlobalSettings}
 import play.api.i18n.Lang
 import play.api.mvc.Results._
 import play.api.mvc.{RequestHeader, Result}
+import play.api.Play.current
 
 import com.yetu.play.authenticator.controllers._
 
@@ -26,7 +28,9 @@ object AuthenticatorGlobal extends AuthenticatorGlobal
  */
 trait AuthenticatorGlobal extends GlobalSettings with SecuredSettings with Logger {
 
-  implicit val system = Akka.system
+  implicit lazy val system = Akka.system
+
+  val LOGOUT_SUBSCRIBE_TOPIC: String = "*.*.logout"
 
   /*
    * The Guice dependencies injector.
@@ -59,6 +63,9 @@ trait AuthenticatorGlobal extends GlobalSettings with SecuredSettings with Logge
   }
 
   // init listening to the logout event
-  val LOGOUT_SUBSCRIBE_TOPIC: String = "*.*.logout"
-  NotificationManager.bindConsumer(LOGOUT_SUBSCRIBE_TOPIC, system.actorOf(EventsActor.props()))
+
+  override def onStart(app: Application): Unit = {
+    val userDao: UserDAO = injector.getProvider(classOf[UserDAO]).get()
+    NotificationManager.bindConsumer(LOGOUT_SUBSCRIBE_TOPIC, system.actorOf(EventsActor.props(userDao)))
+  }
 }

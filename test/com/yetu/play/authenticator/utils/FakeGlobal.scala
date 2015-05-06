@@ -15,6 +15,7 @@ import net.codingwell.scalaguice.ScalaModule
 import com.yetu.play.authenticator.utils.di.SilhouetteModule
 
 import FakeGlobal._
+import play.api.Application
 import play.api.mvc.RequestHeader
 import play.api.mvc.Handler
 
@@ -40,6 +41,8 @@ class FakeGlobal extends AuthenticatorGlobal {
       bind[Environment[User, SessionAuthenticator]].toInstance(env)
     }
   }
+
+  override def onStart(app: Application): Unit = {}
 
   val socialAuthController = injector.getInstance[SocialAuthController](classOf[SocialAuthController])
   val applicationController = injector.getInstance[ApplicationController](classOf[ApplicationController])
@@ -84,7 +87,6 @@ object FakeGlobal {
    * A Silhouette fake environment.
    */
   implicit val env = FakeEnvironment[User, SessionAuthenticator](Seq(identity.loginInfo -> identity))
-
 
 
 }

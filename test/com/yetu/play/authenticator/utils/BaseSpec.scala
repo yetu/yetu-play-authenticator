@@ -1,6 +1,7 @@
 package com.yetu.play.authenticator.utils
 
 import com.mohiva.play.silhouette.impl.authenticators.SessionAuthenticator
+import org.scalatest.{BeforeAndAfter, BeforeAndAfterAll}
 import org.scalatest.concurrent.{AsyncAssertions, ScalaFutures}
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsNull, JsValue}
@@ -15,7 +16,7 @@ import com.mohiva.play.silhouette.test.FakeRequestWithAuthenticator
 
 import scala.concurrent.Future
 
-class BaseSpec extends PlaySpec with ScalaFutures with AsyncAssertions with OneAppPerSuite with Logger with TestData {
+class BaseSpec extends PlaySpec with ScalaFutures with AsyncAssertions with OneAppPerSuite with Logger with TestData with BeforeAndAfterAll with BeforeAndAfter {
 
   def log(s: String) = logger.debug(s)
 
