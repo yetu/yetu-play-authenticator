@@ -9,6 +9,8 @@ organization := "com.yetu"
 
 resolvers := ("Atlassian Releases" at "https://maven.atlassian.com/public/") +: resolvers.value
 
+resolvers += "Bintray Repo" at "http://dl.bintray.com/yetu/maven/"
+
 resolvers += Resolver.sonatypeRepo("snapshots")
 
 libraryDependencies ++= Seq(
