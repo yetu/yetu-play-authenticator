@@ -1,17 +1,17 @@
 package com.yetu.play.authenticator.utils.di
+
+import com.typesafe.config.ConfigFactory
 import play.api.Play
 import play.api.Play.current
+import com.yetu.typesafeconfigextentension.ConfigExtension
 
-object ConfigLoader {
+object ConfigLoader extends ConfigExtension {
 
-
-  lazy val environmentUrl = Play.configuration.getString("application.environmentUrl").get // "-dev.yetu.me"
-  lazy val authorizationUrlPrefix = Play.configuration.getString("silhouette.yetu.authBaseUrl").get // https://auth
-  lazy val authorizationBaseUrl = authorizationUrlPrefix + environmentUrl // https://auth-dev.yetu.me
+  val config = ConfigFactory.load().substitutePropertyValues("application.environmentUrl")
 
   object AuthServer {
-    val profileUrl = authorizationBaseUrl + Play.configuration.getString("silhouette.yetu.profileURL").get
-    val logoutURL = authorizationBaseUrl + Play.configuration.getString("silhouette.yetu.logoutURL").get
+    val profileUrl = config.getString("silhouette.yetu.profileURL")
+    val logoutURL = config.getString("silhouette.yetu.logoutURL")
   }
 
   val singleSignOut = Play.configuration.getBoolean("silhouette.yetu.singleSignOut")
@@ -22,10 +22,4 @@ object ConfigLoader {
     case true => AuthServer.logoutURL
     case false => onLogoutGoToIfNoSingleSignOut
   }
-
-
-
-
-
-
 }

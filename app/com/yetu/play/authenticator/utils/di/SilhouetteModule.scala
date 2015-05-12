@@ -17,9 +17,6 @@ import net.codingwell.scalaguice.ScalaModule
 import play.api.Play
 import play.api.Play.current
 
-import ConfigLoader.authorizationBaseUrl
-
-
 /**
  * The Guice module which wires all Silhouette dependencies.
  */
@@ -137,9 +134,9 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
   def provideYetuProvider(cacheLayer: CacheLayer, stateProvider: OAuth2StateProvider,  httpLayer: HTTPLayer): YetuProvider = {
 
     YetuProvider( httpLayer,stateProvider, OAuth2Settings(
-      authorizationURL = Play.configuration.getString("silhouette.yetu.authorizationURL").map(authorizationBaseUrl + _),
-      accessTokenURL = authorizationBaseUrl + Play.configuration.getString("silhouette.yetu.accessTokenURL").get,
-      redirectURL = Play.configuration.getString("application.redirectURL").get,
+      authorizationURL = Some(ConfigLoader.config.getString("silhouette.yetu.authorizationURL")),
+      accessTokenURL = ConfigLoader.config.getString("silhouette.yetu.accessTokenURL"),
+      redirectURL = ConfigLoader.config.getString("application.redirectURL"),
       clientID = Play.configuration.getString("application.clientId").get,
       clientSecret = Play.configuration.getString("application.clientSecret").get,
       scope = Play.configuration.getString("application.scope")))
