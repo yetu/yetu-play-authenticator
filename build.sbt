@@ -14,7 +14,7 @@ resolvers += "Bintray Repo" at "http://dl.bintray.com/yetu/maven/"
 resolvers += Resolver.sonatypeRepo("snapshots")
 
 libraryDependencies ++= Seq(
-  "com.yetu" %% "typesafe-config-extension" % "0.1.1",
+  "com.yetu" %% "typesafe-config-extension" % "0.1.2",
   "com.mohiva" %% "play-silhouette" % "2.0-RC1",
   "com.yetu" %% "yetu-notification-client-scala" % "1.4",
   "com.mohiva" %% "play-silhouette-testkit" % "2.0-RC1" % "test",
