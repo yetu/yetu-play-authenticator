@@ -13,6 +13,7 @@ import play.api.i18n.Lang
 import play.api.mvc.Results._
 import play.api.mvc.{RequestHeader, Result}
 import play.api.Play.current
+import scala.concurrent.ExecutionContext.Implicits.global
 
 import com.yetu.play.authenticator.controllers._
 
@@ -67,8 +68,7 @@ trait AuthenticatorGlobal extends GlobalSettings with SecuredSettings with Logge
   override def onStart(app: Application): Unit = {
     val userDao: UserDAO = injector.getProvider(classOf[UserDAO]).get()
     logger.info(s"Initialized userDao $userDao")
-    NotificationManager.bindConsumer(LOGOUT_SUBSCRIBE_TOPIC, system.actorOf(EventsActor.props(userDao))) map {
-      r => logger.info(s"Connected to MQ with result $r")
-    }
+    NotificationManager.bindConsumer(LOGOUT_SUBSCRIBE_TOPIC, system.actorOf(EventsActor.props(userDao)))
+      .map(r => logger.info(s"Connected to MQ with result $r"))
   }
 }
