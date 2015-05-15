@@ -66,6 +66,9 @@ trait AuthenticatorGlobal extends GlobalSettings with SecuredSettings with Logge
 
   override def onStart(app: Application): Unit = {
     val userDao: UserDAO = injector.getProvider(classOf[UserDAO]).get()
-    NotificationManager.bindConsumer(LOGOUT_SUBSCRIBE_TOPIC, system.actorOf(EventsActor.props(userDao)))
+    logger.info(s"Initialized userDao $userDao")
+    NotificationManager.bindConsumer(LOGOUT_SUBSCRIBE_TOPIC, system.actorOf(EventsActor.props(userDao))) map {
+      r => logger.info(s"Connected to MQ with result $r")
+    }
   }
 }
