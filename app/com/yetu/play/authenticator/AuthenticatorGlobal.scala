@@ -29,8 +29,6 @@ object AuthenticatorGlobal extends AuthenticatorGlobal
  */
 trait AuthenticatorGlobal extends GlobalSettings with SecuredSettings with Logger {
 
-  implicit lazy val system = Akka.system
-
   val LOGOUT_SUBSCRIBE_TOPIC: String = "*.*.logout"
 
   /*
@@ -68,7 +66,7 @@ trait AuthenticatorGlobal extends GlobalSettings with SecuredSettings with Logge
   override def onStart(app: Application): Unit = {
     val userDao: UserDAO = injector.getProvider(classOf[UserDAO]).get()
     logger.info(s"Initialized userDao $userDao")
-    NotificationManager.bindConsumer(LOGOUT_SUBSCRIBE_TOPIC, system.actorOf(EventsActor.props(userDao)))
+    NotificationManager.bindConsumer(LOGOUT_SUBSCRIBE_TOPIC,  Akka.system.actorOf(EventsActor.props(userDao)))
       .map(r => logger.info(s"Connected to MQ with result $r"))
   }
 }
