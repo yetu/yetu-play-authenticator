@@ -16,7 +16,7 @@ resolvers += Resolver.sonatypeRepo("snapshots")
 libraryDependencies ++= Seq(
   "com.yetu" %% "typesafe-config-extension" % "0.1.2",
   "com.mohiva" %% "play-silhouette" % "2.0-RC1",
-  "com.yetu" %% "yetu-notification-client-scala" % "1.6",
+  "com.yetu" %% "yetu-notification-client-scala" % "1.7",
   "com.mohiva" %% "play-silhouette-testkit" % "2.0-RC1" % "test",
   "net.codingwell" %% "scala-guice" % "4.0.0-beta4",
   "org.scalatest" %% "scalatest" % "2.2.1" % "test",
